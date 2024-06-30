@@ -4,7 +4,7 @@ import { settings } from "./globals";
 import { globalErrorMiddleware } from "./middlewares";
 import cookieParser from "cookie-parser";
 import cron from "node-cron";
-import { getExchangeRateTEST, updateExchangeRates } from "./services";
+import { updateExchangeRates } from "./services";
 import { prisma } from "./globals";
 
 const app = express();

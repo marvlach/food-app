@@ -2,8 +2,9 @@ import { NextFunction, Request, Response } from "express";
 import { ExchangeApiError, ExchangeApiAuthenticationError, ExchangeApiAuthorizationError } from "./errors";
 import { ZodError } from "zod";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { getGuestByApiKey } from "./services";
+import { getUserByName } from "./services";
 import { prisma } from "./globals";
+import bcryptjs from "bcryptjs";
 
 export function globalErrorMiddleware(error: Error, req: Request, res: Response, next: NextFunction) {
   if (error instanceof ExchangeApiError) {
@@ -21,20 +22,31 @@ export function globalErrorMiddleware(error: Error, req: Request, res: Response,
   }
 }
 
-// guest auth
 export async function validateApiKey(req: Request, res: Response, next: NextFunction) {
   try {
-    const authKey = req.headers.authorization;
-    if (!authKey) {
-      throw new ExchangeApiAuthenticationError("API KEY not provided");
+    const appName = req.headers["x-app-name"];
+    const apiKey = req.headers["x-api-key"];
+
+    if (typeof apiKey !== "string") {
+      throw new ExchangeApiAuthenticationError("Api Key not provided in request headers");
     }
 
-    const user = await getGuestByApiKey(authKey, prisma);
+    if (typeof appName !== "string") {
+      throw new ExchangeApiAuthenticationError("App Name not provided in request headers");
+    }
+
+    const user = await getUserByName(appName, prisma);
 
     if (!user) {
-      throw new ExchangeApiAuthenticationError("Invalid API KEY");
+      throw new ExchangeApiAuthenticationError("Invalid App Name");
     }
 
+    const match = await bcryptjs.compare(apiKey, user.apiKey);
+
+    if (!match) {
+      throw new ExchangeApiAuthenticationError("Invalid Api Key");
+    }
+  
     next();
   } catch (error) {
     next(error);
