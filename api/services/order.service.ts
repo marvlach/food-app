@@ -1,5 +1,10 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
+import { PostOrderBodyType } from "../types/order.types";
 
-export async function createNewOrder(email: string, password: string, prisma: PrismaClient) {
-    
+export async function createNewOrder(
+  user: User, 
+  order: PostOrderBodyType, 
+  prisma: PrismaClient,
+) {
+  
 }

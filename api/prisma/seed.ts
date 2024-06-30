@@ -7,25 +7,29 @@ const categoryData: Prisma.CategoryCreateInput[] = [
   {
     name: "Appetizers",
     descr: "funny description",
+    display_order: 1,
     items: {
       create: [
         {
           name: "Frech fries",
           descr: "yum",
           available: true,
-          price: 500,
+          display_order: 1,
+          priceEUR: 500,
         },
         {
           name: "Salad",
           descr: "yum",
           available: true,
-          price: 700,
+          display_order: 2,
+          priceEUR: 700,
         },
         {
           name: "Secret Sauce",
           descr: "yum",
           available: false,
-          price: 1000,
+          display_order: 3,
+          priceEUR: 1000,
         },
       ],
     },
@@ -33,25 +37,29 @@ const categoryData: Prisma.CategoryCreateInput[] = [
   {
     name: "Drinks",
     descr: "funny description",
+    display_order: 3,
     items: {
       create: [
         {
           name: "Orange Juice",
           descr: "yum",
           available: true,
-          price: 512,
+          display_order: 1,
+          priceEUR: 512,
         },
         {
           name: "Coffe",
           descr: "yum",
           available: true,
-          price: 754,
+          display_order: 2,
+          priceEUR: 754,
         },
         {
           name: "Beer",
           descr: "yum",
           available: true,
-          price: 1250,
+          display_order: 3,
+          priceEUR: 1250,
         },
       ],
     },
@@ -59,25 +67,29 @@ const categoryData: Prisma.CategoryCreateInput[] = [
   {
     name: "Main Dishes",
     descr: "funny description",
+    display_order: 2,
     items: {
       create: [
         {
           name: "Burger",
           descr: "juicy",
           available: true,
-          price: 5049,
+          display_order: 1,
+          priceEUR: 5049,
         },
         {
           name: "Steak",
           descr: "rib eye",
           available: true,
-          price: 7654,
+          display_order: 2,
+          priceEUR: 7654,
         },
         {
           name: "Pasta",
           descr: "yum",
           available: false,
-          price: 4300,
+          display_order: 3,
+          priceEUR: 4300,
         },
       ],
     },
@@ -114,9 +126,12 @@ async function main() {
   }
 
   // delete existing
+  await prisma.orderItem.deleteMany();
+  await prisma.order.deleteMany();
   await prisma.item.deleteMany();
   await prisma.category.deleteMany();
   await prisma.merchant.deleteMany();
+  await prisma.user.deleteMany();
 
   seedCategoriesAndItems(categoryData);
   seedUser(settings.seedInitialUsername, settings.seedInitialPassword);

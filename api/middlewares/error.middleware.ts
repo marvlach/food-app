@@ -1,5 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import { FoodAuthenticationError, FoodAuthorizationError, FoodError } from "../utils/errors";
+import {
+  FoodAuthenticationError,
+  FoodAuthorizationError,
+  FoodError,
+  FoodServiceUnavailableError,
+} from "../utils/errors";
 import { ZodError } from "zod";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
@@ -14,6 +19,8 @@ export function globalErrorMiddleware(error: Error, req: Request, res: Response,
     res.status(422).json({ message: "Unproccessable Entity", error });
   } else if (error instanceof PrismaClientKnownRequestError) {
     res.status(400).json({ message: error.message, error: error.meta });
+  } else if (error instanceof FoodServiceUnavailableError) {
+    res.status(503).json({ message: error.message, error: error.error });
   } else {
     res.status(500).json({ message: "Internal Server Error" });
   }

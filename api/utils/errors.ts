@@ -18,3 +18,13 @@ export class FoodAuthorizationError extends Error {
     Object.setPrototypeOf(this, FoodAuthorizationError.prototype);
   }
 }
+
+export class FoodServiceUnavailableError extends Error {
+  error: unknown;
+  
+  constructor(message: string, error: unknown) {
+    super(message);
+    this.error = error
+    Object.setPrototypeOf(this, FoodServiceUnavailableError.prototype);
+  }
+}
