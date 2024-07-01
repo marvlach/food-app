@@ -21,10 +21,20 @@ export class FoodAuthorizationError extends Error {
 
 export class FoodServiceUnavailableError extends Error {
   error: unknown;
-  
+
   constructor(message: string, error: unknown) {
     super(message);
-    this.error = error
+    this.error = error;
     Object.setPrototypeOf(this, FoodServiceUnavailableError.prototype);
+  }
+}
+
+export class FoodServiceUnprocessableEntityError extends Error {
+  error: unknown;
+
+  constructor(message: string, error: unknown) {
+    super(message);
+    this.error = error;
+    Object.setPrototypeOf(this, FoodServiceUnprocessableEntityError.prototype);
   }
 }

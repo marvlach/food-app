@@ -1,18 +1,14 @@
 import express from "express";
-import RequestArgsValidator from "../utils/request-schema-validation";
-import { LoginBodySchema } from "../zod/auth.zod";
 import { LoginBodyType } from "../types/auth.types";
 import { guestLogin, login } from "../services/auth.service";
 import { prisma } from "../globals/prisma-client";
+import { loginRequestValidator } from "../middlewares/validation.middleware";
 
 const router = express.Router();
 
-const loginRequestValidator = new RequestArgsValidator({ body: LoginBodySchema });
-
 // merchant login with username, password
-router.post("/login", async (req, res, next) => {
+router.post("/login", loginRequestValidator.validate, async (req, res, next) => {
   try {
-    loginRequestValidator.validate(req);
     const { email, password }: LoginBodyType = req.body;
 
     const token = await login(email, password, prisma);

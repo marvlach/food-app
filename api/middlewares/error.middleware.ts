@@ -4,6 +4,7 @@ import {
   FoodAuthorizationError,
   FoodError,
   FoodServiceUnavailableError,
+  FoodServiceUnprocessableEntityError,
 } from "../utils/errors";
 import { ZodError } from "zod";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
@@ -21,6 +22,8 @@ export function globalErrorMiddleware(error: Error, req: Request, res: Response,
     res.status(400).json({ message: error.message, error: error.meta });
   } else if (error instanceof FoodServiceUnavailableError) {
     res.status(503).json({ message: error.message, error: error.error });
+  } else if (error instanceof FoodServiceUnprocessableEntityError) {
+    res.status(422).json({ message: error.message, error: error.error });
   } else {
     res.status(500).json({ message: "Internal Server Error" });
   }

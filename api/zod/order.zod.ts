@@ -2,15 +2,14 @@ import { z } from "zod";
 
 export const PostOrderItemSchema = z.object({
   item_id: z.string(),
-  quentity: z.number(),
+  quantity: z.number(),
   comment: z.string(),
-})
-
-export const PostOrderBodySchema = z.object({
-  currency:  z.string(),
-  order_items: z.array(PostOrderItemSchema),
 });
 
+export const PostOrderBodySchema = z.object({
+  currency: z.string(),
+  order_items: z.array(PostOrderItemSchema),
+});
 
 export const GetOrderParamsSchema = z.object({
   email: z.string(),
