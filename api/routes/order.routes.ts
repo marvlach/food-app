@@ -5,6 +5,7 @@ import { PostOrderBodyType } from "../types/order.types";
 import { createNewOrder } from "../services/order.service";
 import { User } from "@prisma/client";
 import { postOrderRequestValidator } from "../middlewares/validation.middleware";
+import { exchangeApi } from "../services/exchange.service";
 
 const router = express.Router();
 
@@ -15,8 +16,8 @@ router.post("/", guestAuthenticator.authenticate, postOrderRequestValidator.vali
     const user: User = req.user;
     const order: PostOrderBodyType = req.body;
 
-    const a = createNewOrder(user, order, prisma);
-    res.status(200).json({ token: "hi" });
+    const placedOrder = await createNewOrder(user, order, prisma, exchangeApi);
+    res.status(200).json({ message: "Successfully placed order", order: placedOrder });
   } catch (error) {
     next(error);
   }

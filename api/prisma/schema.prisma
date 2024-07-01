@@ -50,26 +50,29 @@ model Item {
 }
 
 model Order {
-    id          String      @id @default(auto()) @map("_id") @db.ObjectId
-    user        User        @relation(fields: [user_id], references: [id])
-    user_id     String      @db.ObjectId
-    status      OrderStatus @default(RECEIVED)
-    order_items OrderItem[]
-    currency    String
-    createdAt   DateTime    @default(now())
-    updatedAt   DateTime    @updatedAt
+    id                String      @id @default(auto()) @map("_id") @db.ObjectId
+    user              User        @relation(fields: [user_id], references: [id])
+    address           String
+    user_id           String      @db.ObjectId
+    status            OrderStatus @default(RECEIVED)
+    order_items       OrderItem[]
+    currency          String
+    exchangeToEURThen Float
+    createdAt         DateTime    @default(now())
+    updatedAt         DateTime    @updatedAt
 }
 
 model OrderItem {
-    id        String   @id @default(auto()) @map("_id") @db.ObjectId
-    order     Order    @relation(fields: [order_id], references: [id])
-    order_id  String   @db.ObjectId
-    item      Item     @relation(fields: [item_id], references: [id])
-    item_id   String   @db.ObjectId
-    quantity  Int
-    comment   String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    id           String   @id @default(auto()) @map("_id") @db.ObjectId
+    order        Order    @relation(fields: [order_id], references: [id])
+    order_id     String   @db.ObjectId
+    item         Item     @relation(fields: [item_id], references: [id])
+    item_id      String   @db.ObjectId
+    quantity     Int
+    priceEURThen Int
+    comment      String
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
 }
 
 enum OrderStatus {

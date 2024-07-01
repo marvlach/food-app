@@ -8,6 +8,7 @@ export const PostOrderItemSchema = z.object({
 
 export const PostOrderBodySchema = z.object({
   currency: z.string(),
+  address: z.string(),
   order_items: z.array(PostOrderItemSchema),
 });
 
