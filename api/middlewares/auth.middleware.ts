@@ -183,3 +183,16 @@ export const guestXORMerchantAuthenticator = new AuthenticationMiddleware(
     new AuthRuleAnd([new AuthRuleNot(new AuthRule(validateGuestCookieRule)), new AuthRule(validateMerchantJWTRule)]),
   ])
 );
+
+export const exportValidationUnitsForTesting = {
+  validateGuestCookieRule,
+  validateMerchantJWTRule,
+}
+
+export const exportAuthClassesForTesting = {
+  AuthRule,
+  AuthRuleAnd,
+  AuthRuleOr,
+  AuthRuleNot,
+  AuthenticationMiddleware,
+}

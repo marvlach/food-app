@@ -32,3 +32,7 @@ class RequestArgsValidator {
 export const postOrderRequestValidator = new RequestArgsValidator({ body: PostOrderBodySchema });
 export const getMenuRequestValidator = new RequestArgsValidator({ params: GetMenuParamsSchema });
 export const loginRequestValidator = new RequestArgsValidator({ body: LoginBodySchema });
+
+export const exportRequestArgsValidatorForTesting = {
+  RequestArgsValidator: RequestArgsValidator
+} 
