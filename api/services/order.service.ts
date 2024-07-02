@@ -34,3 +34,12 @@ export async function createNewOrder(
   });
   return orderToInsert;
 }
+
+export async function getOrders(where: { [k: string]: unknown } | undefined, prisma: PrismaClient) {
+  const orders = await prisma.order.findMany({
+    ...(where && { where }),
+    include: { order_items: { include: { item: true } } },
+    orderBy: { createdAt: "asc" },
+  });
+  return orders;
+}

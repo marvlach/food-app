@@ -2,7 +2,7 @@ import express from "express";
 import { prisma } from "../globals/prisma-client";
 import { guestAuthenticator, guestOrMerchantAuthenticator } from "../middlewares/auth.middleware";
 import { PostOrderBodyType } from "../types/order.types";
-import { createNewOrder } from "../services/order.service";
+import { createNewOrder, getOrders } from "../services/order.service";
 import { User } from "@prisma/client";
 import { postOrderRequestValidator } from "../middlewares/validation.middleware";
 import { exchangeApi } from "../services/exchange.service";
@@ -23,15 +23,15 @@ router.post("/", guestAuthenticator.authenticate, postOrderRequestValidator.vali
   }
 });
 
-// user post order
 // if it's merchant get all orders, if guest get guest's orders
 router.get("/", guestOrMerchantAuthenticator.authenticate, async (req, res, next) => {
   try {
     // @ts-ignore
-    console.log(req.merchant, req.user);
-
-    res.status(200).json({ token: "hi" });
+    const where = req.merchant ? undefined : { user_id: req.user.id };
+    const orders = await getOrders(where, prisma);
+    res.status(200).json({ orders });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 });

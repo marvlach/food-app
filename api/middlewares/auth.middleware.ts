@@ -135,12 +135,12 @@ const validateGuestCookieRule = async (req: Request): Promise<AuthenticationRule
   try {
     const guestUserId = req.cookies.guest_user_id;
     if (typeof guestUserId !== "string") {
-      throw new FoodAuthenticationError("Cannot order without a valid cookie");
+      throw new FoodAuthenticationError("Invalid guest cookie");
     }
     const user = await getGuestById(guestUserId, prisma);
 
     if (!user) {
-      throw new FoodAuthenticationError("Cannot order without a valid cookie");
+      throw new FoodAuthenticationError("Invalid guest cookie");
     }
 
     return { valid: true, payload: { user: user } };
