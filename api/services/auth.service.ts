@@ -25,7 +25,7 @@ export async function login(email: string, password: string, prisma: PrismaClien
     isAdmin: foundMerchant.is_admin,
   };
 
-  const accessToken = jwt.sign(jwtPayload, settings.jwtSecret, { expiresIn: "1000s" });
+  const accessToken = jwt.sign(jwtPayload, settings.jwtSecret, { expiresIn: "3600s" });
 
   return accessToken;
 }
