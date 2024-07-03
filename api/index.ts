@@ -2,9 +2,16 @@ import express from "express";
 import { routes } from "./routes";
 import { settings } from "./globals/settings";
 import { globalErrorMiddleware } from "./middlewares/error.middleware";
-import cookieParser from "cookie-parser"
+import cookieParser from "cookie-parser";
+import { credentials } from "./middlewares/credentials.middleware";
+import { corsRules } from "./middlewares/cors.middleware";
 
 const app = express();
+
+app.set("view engine", "ejs");
+
+app.use(credentials);
+app.use(corsRules);
 
 app.use(cookieParser());
 app.use(express.json());
@@ -25,4 +32,3 @@ app.use(globalErrorMiddleware);
 app.listen(settings.port, () => {
   console.log(`🚀 Server ready at: http://localhost:${settings.port}`);
 });
-

@@ -1,7 +1,7 @@
 import { RequestArgsValidationSchemas } from "../types/request.types";
 import { Request, Response, NextFunction } from "express";
 import { FoodServiceUnprocessableEntityError } from "../utils/errors";
-import { PostOrderBodySchema } from "../zod/order.zod";
+import { GetOrderParamsSchema, PostOrderBodySchema } from "../zod/order.zod";
 import { GetMenuParamsSchema } from "../zod/menu.zod";
 import { LoginBodySchema } from "../zod/auth.zod";
 
@@ -32,6 +32,7 @@ class RequestArgsValidator {
 export const postOrderRequestValidator = new RequestArgsValidator({ body: PostOrderBodySchema });
 export const getMenuRequestValidator = new RequestArgsValidator({ params: GetMenuParamsSchema });
 export const loginRequestValidator = new RequestArgsValidator({ body: LoginBodySchema });
+export const getOrdersRequestValidator = new RequestArgsValidator({ params: GetOrderParamsSchema });
 
 export const exportRequestArgsValidatorForTesting = {
   RequestArgsValidator: RequestArgsValidator

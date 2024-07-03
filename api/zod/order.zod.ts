@@ -11,3 +11,7 @@ export const PostOrderBodySchema = z.object({
   address: z.string(),
   order_items: z.array(PostOrderItemSchema),
 });
+
+export const GetOrderParamsSchema = z.object({
+  view: z.string().optional()
+});

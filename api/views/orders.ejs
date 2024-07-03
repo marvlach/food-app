@@ -1,0 +1,33 @@
+<!-- views/orders.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orders List</title>
+</head>
+<body>
+  <h1>List of Orders</h1>
+  <ul>
+    <% orders.forEach(order => { %>
+      <li>
+        <strong>Address:</strong> <%= order.address %><br>
+        <strong>Status:</strong> <%= order.status %><br>
+        <strong>Created At:</strong> <%= order.createdAt.toString().substring(0, 25)  %><br>
+        <strong>Items:</strong>
+        <ul>
+          <% order.order_items.forEach(orderItem => { %>
+            <li>
+              <%= orderItem.item.name %> - Quantity: <%= orderItem.quantity %> - Price: <%= order.currency %> <%= (Math.round(order.exchangeToEURThen * orderItem.priceEURThen) / 100).toFixed(2) %><br>
+              <em>Comment:</em> <%= orderItem.comment %>
+            </li>
+          <% }) %>
+        </ul>
+        <strong>Total:</strong> <%= order.order_items.reduce((total, orderItem) => {
+          return total + orderItem.quantity * (Math.round(order.exchangeToEURThen * orderItem.priceEURThen) / 100);
+        }, 0).toFixed(2) %> <%= order.currency %><br>
+      </li>
+    <% }) %>
+  </ul>
+</body>
+</html>

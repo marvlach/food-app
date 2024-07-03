@@ -3,6 +3,7 @@ import { LoginBodyType } from "../types/auth.types";
 import { guestLogin, login } from "../services/auth.service";
 import { prisma } from "../globals/prisma-client";
 import { loginRequestValidator } from "../middlewares/validation.middleware";
+import { merchantAuthenticator } from "../middlewares/auth.middleware";
 
 const router = express.Router();
 
@@ -31,6 +32,15 @@ router.get("/login", async (req, res, next) => {
     } else {
       res.status(200).json({ message: "User Exist" });
     }
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/me", merchantAuthenticator.authenticate, async (req, res, next) => {
+  try {
+    // @ts-ignore
+    res.status(200).json({ merchant: req.merchant });
   } catch (error) {
     next(error);
   }

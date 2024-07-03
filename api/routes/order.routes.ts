@@ -1,10 +1,10 @@
 import express from "express";
 import { prisma } from "../globals/prisma-client";
-import { guestAuthenticator, guestOrMerchantAuthenticator } from "../middlewares/auth.middleware";
+import { guestAuthenticator, guestOrMerchantAuthenticator, merchantAuthenticator } from "../middlewares/auth.middleware";
 import { PostOrderBodyType } from "../types/order.types";
 import { createNewOrder, getOrders } from "../services/order.service";
 import { User } from "@prisma/client";
-import { postOrderRequestValidator } from "../middlewares/validation.middleware";
+import { getOrdersRequestValidator, postOrderRequestValidator } from "../middlewares/validation.middleware";
 import { exchangeApi } from "../services/exchange.service";
 
 const router = express.Router();
@@ -24,12 +24,17 @@ router.post("/", guestAuthenticator.authenticate, postOrderRequestValidator.vali
 });
 
 // if it's merchant get all orders, if guest get guest's orders
-router.get("/", guestOrMerchantAuthenticator.authenticate, async (req, res, next) => {
+router.get("/", guestOrMerchantAuthenticator.authenticate, getOrdersRequestValidator.validate, async (req, res, next) => {
   try {
     // @ts-ignore
     const where = req.merchant ? undefined : { user_id: req.user.id };
+    const isView = req.query.view;
     const orders = await getOrders(where, prisma);
-    res.status(200).json({ orders });
+    if (isView) {
+      res.status(200).render('orders', { orders });
+    } else {
+      res.status(200).json({ orders });
+    }
   } catch (error) {
     console.log(error);
     next(error);
