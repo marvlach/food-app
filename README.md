@@ -56,4 +56,101 @@ npm run start
 for a plain old Node server.
 
 ## Usage
-...
+
+Below, you can find some examples of the requests.
+
+### As a guest
+
+A guest needs to "authenticate" by calling ```GET /auth/login``` endpoint and getting a HTTP-only cookie. With this cookie, the guest can place orders and get their own orders. If the cookie is removed from the guest's client, they can no longer place orders or get their past orders. The cookie value is the Mongo user id, so if you lose the cookie, head to Atlas, find the user in the user collection and get it's id.
+
+```
+curl --location 'http://localhost:7001/auth/login' \
+--data ''
+```
+
+To get available currencies(usefull to fill a dropdown select component in a UI), you can ```GET /currency```. You don't really need a cookie to get the currencies. 
+
+```
+curl --location 'http://localhost:7001/currency' \
+--header 'Cookie: guest_user_id=66853fba82b75b2dbc0e338e' \
+--data ''
+```
+
+To get the menu you can ```GET /menu``` and optionally specify a query parameter ```currency=AED``` with one of the supported currencies. 
+
+```
+curl --location 'http://localhost:7001/menu?currency=AED' \
+--header 'Cookie: guest_user_id=66853fba82b75b2dbc0e338e' \
+--data ''
+```
+
+To place an order you need to ```POST /order``` with the a request body like below, where "item_id" correspond to ids of the Mongo item collection.
+
+```
+curl --location 'http://localhost:7001/order' \
+--header 'Content-Type: application/json' \
+--header 'Cookie: guest_user_id=66853fba82b75b2dbc0e338e' \
+--data '{
+    "currency": "USD",
+    "address": "Vas. Sofias 5, Chaidari, Athens",
+    "order_items": [
+        {
+            "item_id": "668539f29b0bd15ecc4e9d19",
+            "quantity": 1,
+            "comment": "xwris alati" 
+        },
+        {
+            "item_id": "668539f39b0bd15ecc4e9d1f",
+            "quantity": 3,
+            "comment": "xwris patates"
+        }, 
+        {
+            "item_id": "668539f39b0bd15ecc4e9d21",
+            "quantity": 5,
+            "comment": ""
+        }
+    ]
+}'
+```
+
+A guest can get their orders by calling the ```GET /order``` endpoint to get a json response or ```GET /order?view=whatever``` to get an HTML response.
+
+```
+curl --location 'http://localhost:7001/order' \
+--header 'Cookie: guest_user_id=668544bb82b75b2dbc0e3393' \
+--data ''
+
+curl --location 'http://localhost:7001/order?view=12' \
+--header 'Cookie: guest_user_id=668544bb82b75b2dbc0e3393' \
+--data ''
+```
+
+### As a merchant
+
+The merchant was seeded in the DB during the installation process. You can login with the email, password you provided in the .env file. If you left them as they were in the template.env, the request is the following. The response will contain a JWT. You will need to manually attach it to the request header like below, in the subsequest requests. 
+
+```
+curl --location 'http://localhost:7001/auth/login' \
+--header 'Content-Type: application/json' \
+--header 'Cookie: guest_user_id=668544bb82b75b2dbc0e3393' \
+--data-raw '{
+    "email": "admin@admin.com",
+    "password": "admin"
+}'
+```
+
+To get all the orders in json
+
+```
+curl --location 'http://localhost:7001/order' \
+--header 'Authorization: Bearer yourJWT' \
+--data ''
+```
+
+and to get all orders in HTML
+
+```
+curl --location 'http://localhost:7001/order?view=whateva' \
+--header 'Authorization: Bearer yourJWT' \
+--data ''
+```
