@@ -154,3 +154,12 @@ curl --location 'http://localhost:7001/order?view=whateva' \
 --header 'Authorization: Bearer yourJWT' \
 --data ''
 ```
+
+## Test
+
+To run the tests:
+
+```
+cd api
+npm run coverage
+```
